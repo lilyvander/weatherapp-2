@@ -1,18 +1,15 @@
 
-// Get weather api key
+//Openweather api key
 const openweatherAPIkey = '5b0aa28acc2c6d6a31d588c9cb20336a';
 
-// Other global variables  
-const searchBtnElement = document.getElementById('#search-btn');
-const searchFormElement = document.getElementById('#search-city');
-const displayCurrentWeatherElement = document.getElementById('todays-weather');
-const displayForcastWeatherElement = document.getElementById('todays-weather');
-const displaySavedCitiesList = document.getElementById('saved-cities');
+var searchBtn = document.querySelector('.search-btn');
+var citySearchInput = document.querySelector('.search-city');
 
-// Call API to get weather data 
-function getWeatherData(city) {
-    const openWeatherEndPointURL = '`https://api.openweathermap.org/data/2.5/weather?q=Denver&appid=5b0aa28acc2c6d6a31d588c9cb20336a';
-    fetch(openWeatherEndPointURL)
+
+// Function get forcast weather 
+getForcastData = function(location, lat, lon){
+    const openWeatherForcastURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${openweatherAPIkey}`;
+    fetch(openWeatherForcastURL)
     .then(function (response){
         return response.json();
     })
@@ -20,24 +17,38 @@ function getWeatherData(city) {
         console.log(data)
     })
 
-    displayWeatherData(data);
+    }
+console.log(getForcastData);
+
+
+// Funciton to get city name from search and find Lat and Lon in data 
+getCityName = function(){
+    cityName = citySearchInput.value.trim();
+    console.log(cityName);
+
+    const openWeatherEndPointURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${openweatherAPIkey}`;
+
+    // fetch weather data based on city search 
+    fetch(openWeatherEndPointURL)
+    .then(function (response){
+        return response.json();
+    })
+    .then(function(data){
+        console.log(data);
+     const location = data.name;
+     const lat = data.coord.lat;
+     const lon = data.coord.lon;
+     getForcastData(location, lat, lon);
+    })
+
+
+
+
+    // var savedCitiesList = "<li>" + cityName + "</li>";
+   // document.querySelectorAll('ul').appendChild(savedCitiesList);
 }
 
-// Function add weather data to page and create weather card elements 
+searchBtn.addEventListener('click', getCityName);
 
-function displayWeatherData(data) {
-    var temp = (data.main.temp);
-    var windSpeed = data.wind.speed;
-    var humid = data.humid.speed;
-
-
-    var weatherCards = document.createElement('card');
-
-    weatherCards.innerHTML = `
-    `
-}
-
-console.log(getWeatherData('Denver'));
-
-searchBtnElement.addEventListener('click', getWeatherData,)
+// console.log(getCityName())
 
